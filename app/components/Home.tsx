@@ -1,11 +1,13 @@
 import SplineScene from "@/app/components/SplineScene";
 import { FaInstagram, FaLinkedinIn, FaGithub } from "react-icons/fa";
+import Image from "next/image";
+
 
 export default function Home() {
   return (
     <section
       id="home"
-      className="relative isolate w-screen h-screen overflow-hidden bg-black"
+       className="snap-start relative isolate w-screen h-screen overflow-hidden bg-black"
     >
       {/* Background 3D */}
       <SplineScene />
@@ -13,11 +15,24 @@ export default function Home() {
       {/* Overlay */}
       <div className="absolute inset-0 z-10 bg-black/35" />
 
-      {/* Social icons (lateral izquierdo) */}
-      <div className="fixed left-6 top-24 z-30 hidden md:flex flex-col items-center gap-6">
-        {/* línea decorativa arriba */}
-        <span className="h-16 w-px bg-white/30 mb-2" />
+      {/* Lateral izquierdo: logo + línea + redes */}
+      <div className="fixed left-6 top-8 z-30 hidden md:flex flex-col items-center gap-6">
 
+        {/* LOGO */}
+        <div className="mb-4">
+          <Image
+            src="/images/logo_blanco.png"
+            alt="Alex Logo"
+            width={40}
+            height={40}
+            className="object-contain"
+          />
+        </div>
+
+        {/* línea decorativa */}
+        <span className="h-16 w-px bg-white/30" />
+
+        {/* redes */}
         <a
           href="https://instagram.com/"
           target="_blank"
@@ -48,6 +63,7 @@ export default function Home() {
           <FaGithub size={18} />
         </a>
       </div>
+
 
 
       {/* Contenido */}
