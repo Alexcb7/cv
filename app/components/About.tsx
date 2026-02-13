@@ -1,67 +1,53 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useRef, type RefObject } from "react";
+import ScrollFloat from "@/app/components/reactbits/scrollfloat";
+import ScrollReveal from "@/app/components/reactbits/scrollreveal";
 
-gsap.registerPlugin(ScrollTrigger);
-
-export default function About() {
+export default function About({
+  scrollContainerRef,
+}: {
+  scrollContainerRef: RefObject<HTMLElement>;
+}) {
   const sectionRef = useRef<HTMLElement | null>(null);
-  const contentRef = useRef<HTMLDivElement | null>(null);
-
-  useEffect(() => {
-    const section = sectionRef.current;
-    const content = contentRef.current;
-
-    if (!section || !content) return;
-
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        content,
-        {
-          y: 80,
-          opacity: 0,
-        },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 1.2,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: section,
-            start: "top 70%",
-            toggleActions: "play none none reverse",
-          },
-        }
-      );
-    }, section);
-
-    return () => ctx.revert();
-  }, []);
 
   return (
     <section
       ref={sectionRef}
       id="about"
-      className="relative w-screen h-screen bg-[#d07a3a] flex items-center justify-center px-8"
+      className="min-h-[130vh] w-screen bg-black flex items-center justify-center px-6"
     >
-      <div
-        ref={contentRef}
-        className="max-w-4xl text-center text-black"
-      >
-        <p className="mb-4 text-xs uppercase tracking-[0.3em] text-black/60">
-          ABOUT
-        </p>
+      <div className="text-center max-w-5xl mx-auto">
+        {/* H2 / Hero */}
+        <div className="font-semibold text-white leading-[0.95] tracking-tight">
+          <div className="font-[Bungee] text-[clamp(3.5rem,9vw,10rem)] [&_*]:text-inherit">
+            <ScrollFloat
+              scrollContainerRef={scrollContainerRef}
+              animationDuration={1}
+              ease="back.inOut(2)"
+              scrollStart="center bottom+=50%"
+              scrollEnd="bottom bottom-=50%"
+              stagger={0.03}
+            >
+              Hi, I’m Alex
+            </ScrollFloat>
+          </div>
+        </div>
 
-        <h2 className="text-5xl md:text-6xl font-semibold leading-tight">
-          Diseño y desarrollo experiencias digitales limpias.
-        </h2>
+        {/* Párrafo con React Bits ScrollReveal */}
+        <ScrollReveal
+          scrollContainerRef={scrollContainerRef}
+          baseOpacity={0.1}
+          enableBlur
+          baseRotation={3}
+          blurStrength={4}
+          textClassName="font-['Playfair_Display'] mt-20 font-bold text-xl md:text-4xl text-white/90 max-w-3xl mx-auto"
+        >
+          I develop modern web interfaces that transform ideas into solid digital experiences.
+          I combine design, performance, and technical precision to help businesses and small
+          companies grow in the digital environment.
+        </ScrollReveal>
 
-        <p className="mt-8 text-lg md:text-xl text-black/80">
-          Trabajo con Next.js, TypeScript y tecnologías modernas para crear
-          productos rápidos, escalables y visualmente cuidados.
-        </p>
       </div>
     </section>
   );

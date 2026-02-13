@@ -1,14 +1,21 @@
+"use client";
+
+import Header from "@/app/components/Header";
 import SplineScene from "@/app/components/SplineScene";
 import { FaInstagram, FaLinkedinIn, FaGithub } from "react-icons/fa";
 import Image from "next/image";
-
 
 export default function Home() {
   return (
     <section
       id="home"
-       className="snap-start relative isolate w-screen h-screen overflow-hidden bg-black"
+      className="relative isolate w-screen min-h-screen overflow-hidden bg-black"
     >
+      {/* Header SOLO en Home */}
+      <div className="absolute top-0 left-0 w-full z-50">
+        <Header />
+      </div>
+
       {/* Background 3D */}
       <SplineScene />
 
@@ -16,21 +23,20 @@ export default function Home() {
       <div className="absolute inset-0 z-10 bg-black/35" />
 
       {/* Lateral izquierdo: logo + línea + redes */}
-      <div className="fixed left-6 top-8 z-30 hidden md:flex flex-col items-center gap-6">
-
+      <div className="absolute left-6 top-8 z-30 hidden md:flex flex-col items-center gap-6">
         {/* LOGO */}
         <div className="mb-4">
           <Image
             src="/images/logo_blanco.png"
             alt="Alex Logo"
-            width={40}
-            height={40}
+            width={60}
+            height={60}
             className="object-contain"
           />
         </div>
 
         {/* línea decorativa */}
-        <span className="h-16 w-px bg-white/30" />
+        <span className="h-46 w-px bg-white" />
 
         {/* redes */}
         <a
@@ -40,7 +46,7 @@ export default function Home() {
           className="text-white/60 hover:text-white transition-colors"
           aria-label="Instagram"
         >
-          <FaInstagram size={18} />
+          <FaInstagram size={24} />
         </a>
 
         <a
@@ -50,7 +56,7 @@ export default function Home() {
           className="text-white/60 hover:text-white transition-colors"
           aria-label="LinkedIn"
         >
-          <FaLinkedinIn size={18} />
+          <FaLinkedinIn size={24} />
         </a>
 
         <a
@@ -60,17 +66,15 @@ export default function Home() {
           className="text-white/60 hover:text-white transition-colors"
           aria-label="GitHub"
         >
-          <FaGithub size={18} />
+          <FaGithub size={24} />
         </a>
       </div>
 
-
-
       {/* Contenido */}
-      <div className="relative z-20 flex h-full items-center justify-center px-8 text-center text-white">
+      <div className="relative z-20 flex min-h-screen items-center justify-center px-8 text-center text-white">
         <div>
           <p className="mb-4 text-sm uppercase tracking-widest text-white/70">
-            Hi, I’m Alex
+            Alex Cortell
           </p>
 
           <h1 className="text-6xl md:text-7xl font-bold leading-tight">

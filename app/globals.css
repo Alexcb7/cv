@@ -1,32 +1,36 @@
+/* 🔥 Google Fonts debe ir SIEMPRE primero */
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap");
+
+/* Tailwind */
 @import "tailwindcss";
 @import "tw-animate-css";
 
+/* ============================= */
+/* Base Layout                   */
+/* ============================= */
 
-/* Evitar scroll lateral */
-html, body {
+html,
+body {
   width: 100%;
   height: 100%;
+  scroll-behavior: smooth;
   overflow-x: hidden;
 }
 
+/* ============================= */
+/* Hide Scrollbars               */
+/* ============================= */
+
 /* Firefox */
-html, body {
+html,
+body,
+main {
   scrollbar-width: none;
 }
 
-/* Chrome/Safari/Edge */
+/* Chrome / Safari / Edge */
 html::-webkit-scrollbar,
-body::-webkit-scrollbar {
-  width: 0px;
-  height: 0px;
-}
-
-
-/* El contenedor que scrollea (tu main) */
-main {
-  scrollbar-width: none; /* Firefox */
-}
-
+body::-webkit-scrollbar,
 main::-webkit-scrollbar {
   width: 0px;
   height: 0px;
