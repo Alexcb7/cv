@@ -18,15 +18,12 @@ type Step = {
 export default function Technologies({
   scrollContainerRef,
 }: {
-  scrollContainerRef: RefObject<HTMLElement>;
+  scrollContainerRef: RefObject<HTMLElement | null>;
 }) {
   const sectionRef = useRef<HTMLElement | null>(null);
 
-  // ribbon refs
   const ribbonWrapRef = useRef<HTMLDivElement | null>(null);
   const ribbonPathRef = useRef<SVGPathElement | null>(null);
-
-  // timeline track (se mueve hacia arriba mientras bajas)
   const trackRef = useRef<HTMLDivElement | null>(null);
 
   const steps: Step[] = useMemo(
@@ -47,35 +44,31 @@ export default function Technologies({
     const wrap = ribbonWrapRef.current;
     const path = ribbonPathRef.current;
     const track = trackRef.current;
-    if (!section || !wrap || !path || !track) return;
 
     const scroller = scrollContainerRef.current;
 
-    const ctx = gsap.context(() => {
-      // ---- Ribbon flow (dash) ----
-      const length = path.getTotalLength();
-      path.style.strokeDasharray = `${length * 0.15} ${length * 0.06}`;
+    if (!section || !wrap || !path || !track || !scroller) return;
 
-      const dashTween = gsap.to(path, {
-        strokeDashoffset: -length,
-        duration: 2.5,
-        ease: "none",
-        repeat: -1,
-      });
+    const ctx = gsap.context(() => {
+      // -------- Banda (si NO quieres cortes, BORRA este bloque dash) --------
+      // const length = path.getTotalLength();
+      // path.style.strokeDasharray = `${length * 0.15} ${length * 0.06}`;
+      // const dashTween = gsap.to(path, {
+      //   strokeDashoffset: -length,
+      //   duration: 2.5,
+      //   ease: "none",
+      //   repeat: -1,
+      // });
 
       const items = gsap.utils.toArray<HTMLElement>("[data-tech-step]");
       const total = items.length;
 
-      // estado inicial steps
       gsap.set(items, { opacity: 0, y: 30, scale: 0.92, filter: "blur(10px)" });
 
-      // ---- Movimiento del track hacia arriba (así “bajas” encontrándolos) ----
-      // Track es más alto que la ventana, lo movemos hacia arriba con scrub.
       gsap.fromTo(
         track,
         { y: 0 },
         {
-          // sube el track (el contenido baja visualmente)
           y: () => -(track.scrollHeight - window.innerHeight * 0.75),
           ease: "none",
           scrollTrigger: {
@@ -88,7 +81,6 @@ export default function Technologies({
         }
       );
 
-      // ---- Master: ribbon viva + step activo según progreso ----
       const master = ScrollTrigger.create({
         trigger: section,
         scroller,
@@ -98,7 +90,6 @@ export default function Technologies({
         onUpdate: (self) => {
           const p = self.progress;
 
-          // ribbon viva (lateral)
           const oscillations = 2.0;
           const s = Math.sin(p * Math.PI * 2 * oscillations);
           const ampX = 220;
@@ -115,7 +106,6 @@ export default function Technologies({
             ease: "power2.out",
           });
 
-          // step activo (1 por tramo)
           const idx = Math.min(total - 1, Math.floor(p * total));
 
           items.forEach((el, i) => {
@@ -138,7 +128,7 @@ export default function Technologies({
 
       return () => {
         master.kill();
-        dashTween.kill();
+        // dashTween.kill();
       };
     }, section);
 
@@ -146,25 +136,27 @@ export default function Technologies({
   }, [scrollContainerRef]);
 
   return (
-    <section ref={sectionRef} id="technologies" className="relative min-h-[360vh] w-screen bg-black">
+    <section
+      ref={sectionRef}
+      id="technologies"
+      className="relative min-h-[360vh] w-screen bg-black"
+    >
       <div className="sticky top-0 h-screen overflow-hidden flex items-center justify-center px-6">
         <div className="relative w-full max-w-6xl h-[90vh]">
-          {/* title */}
           <div className="absolute inset-x-0 top-6 text-center z-20">
             <h3 className="text-white/90 text-xl md:text-2xl tracking-tight">
               Technologies I use
             </h3>
           </div>
 
-          {/* ribbon */}
           <div
             ref={ribbonWrapRef}
             className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10"
             aria-hidden="true"
           >
             <svg
-              width="520"
-              height="520"
+              width="760"   // ✅ más grande
+              height="760"  // ✅ más grande
               viewBox="0 0 520 520"
               className="opacity-95 drop-shadow-[0_0_40px_rgba(255,255,255,0.2)]"
             >
@@ -175,19 +167,14 @@ export default function Technologies({
                    C 240 320, 210 380, 320 490"
                 fill="none"
                 stroke="#ffffff"
-                strokeWidth="30"
+                strokeWidth="46" // ✅ más ancha
                 strokeLinecap="round"
                 strokeLinejoin="round"
               />
             </svg>
           </div>
 
-          {/* track (alto) que se mueve) */}
-          <div
-            ref={trackRef}
-            className="absolute left-0 right-0 top-24 bottom-10 z-20"
-          >
-            {/* hacemos el track alto */}
+          <div ref={trackRef} className="absolute left-0 right-0 top-24 bottom-10 z-20">
             <div className="relative h-[220vh]">
               {steps.map((t, i) => (
                 <TimelineStep
@@ -195,7 +182,6 @@ export default function Technologies({
                   side={t.side}
                   label={t.label}
                   icon={t.icon}
-                  // cada step a una altura diferente
                   top={`${i * 30 + 5}%`}
                 />
               ))}
@@ -219,20 +205,8 @@ function TimelineStep({
   top: string;
 }) {
   return (
-    <div
-      data-tech-step
-      className={[
-        "absolute w-full",
-        // altura distinta
-      ].join(" ")}
-      style={{ top }}
-    >
-      <div
-        className={[
-          "flex items-center gap-4",
-          side === "left" ? "justify-start" : "justify-end",
-        ].join(" ")}
-      >
+    <div data-tech-step className="absolute w-full" style={{ top }}>
+      <div className={`flex items-center gap-4 ${side === "left" ? "justify-start" : "justify-end"}`}>
         {side === "left" ? (
           <>
             <div className="text-6xl text-white drop-shadow-[0_0_18px_rgba(255,255,255,0.55)]">

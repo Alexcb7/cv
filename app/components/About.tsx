@@ -7,7 +7,7 @@ import ScrollReveal from "@/app/components/reactbits/scrollreveal";
 export default function About({
   scrollContainerRef,
 }: {
-  scrollContainerRef: RefObject<HTMLElement>;
+  scrollContainerRef: RefObject<HTMLElement | null>;
 }) {
   const sectionRef = useRef<HTMLElement | null>(null);
 
@@ -18,7 +18,6 @@ export default function About({
       className="min-h-[130vh] w-screen bg-black flex items-center justify-center px-6"
     >
       <div className="text-center max-w-5xl mx-auto">
-        {/* H2 / Hero */}
         <div className="font-semibold text-white leading-[0.95] tracking-tight">
           <div className="font-[Bungee] text-[clamp(3.5rem,9vw,10rem)] [&_*]:text-inherit">
             <ScrollFloat
@@ -34,7 +33,6 @@ export default function About({
           </div>
         </div>
 
-        {/* Párrafo con React Bits ScrollReveal */}
         <ScrollReveal
           scrollContainerRef={scrollContainerRef}
           baseOpacity={0.1}
@@ -47,7 +45,6 @@ export default function About({
           I combine design, performance, and technical precision to help businesses and small
           companies grow in the digital environment.
         </ScrollReveal>
-
       </div>
     </section>
   );
