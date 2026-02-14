@@ -18,16 +18,13 @@ type Step = {
 export default function Technologies({
   scrollContainerRef,
 }: {
-  scrollContainerRef: RefObject<HTMLElement>;
+  scrollContainerRef: RefObject<HTMLElement | null>;
 }) {
   const sectionRef = useRef<HTMLElement | null>(null);
   const stageRef = useRef<HTMLDivElement | null>(null);
 
-  // ribbon refs
   const ribbonWrapRef = useRef<HTMLDivElement | null>(null);
   const ribbonPathRef = useRef<SVGPathElement | null>(null);
-
-  // timeline track (se mueve hacia arriba mientras bajas)
   const trackRef = useRef<HTMLDivElement | null>(null);
 
   const steps: Step[] = useMemo(
@@ -49,16 +46,23 @@ export default function Technologies({
     const wrap = ribbonWrapRef.current;
     const path = ribbonPathRef.current;
     const track = trackRef.current;
-    if (!section || !stage || !wrap || !path || !track) return;
+    if (!section || !wrap || !path || !track) return;
 
     const scroller = scrollContainerRef.current;
 
-    const ctx = gsap.context(() => {
-      // ---- Ribbon (línea continua) ----
-      path.style.strokeDasharray = "none";
-      path.style.strokeDashoffset = "0";
+    if (!section || !wrap || !path || !track || !scroller) return;
 
-      const revealStartProgress = 0.22;
+    const ctx = gsap.context(() => {
+      // ---- Ribbon flow (dash) ----
+      const length = path.getTotalLength();
+      path.style.strokeDasharray = `${length * 0.15} ${length * 0.06}`;
+
+      const dashTween = gsap.to(path, {
+        strokeDashoffset: -length,
+        duration: 2.5,
+        ease: "none",
+        repeat: -1,
+      });
 
       const items = gsap.utils.toArray<HTMLElement>("[data-tech-step]");
 
@@ -67,20 +71,14 @@ export default function Technologies({
       let lastSide: "left" | "right" | null = null;
       let sideSpin = 0;
 
-      // estado inicial steps
       gsap.set(items, { opacity: 0, y: 30, scale: 0.92, filter: "blur(10px)" });
 
-      // ---- Movimiento del track hacia arriba (así “bajas” encontrándolos) ----
-      // Track es más alto que la ventana, lo movemos hacia arriba con scrub.
       gsap.fromTo(
         track,
         { y: 0 },
         {
           // sube el track (el contenido baja visualmente)
-          y: () => {
-            const viewportH = scroller ? scroller.clientHeight : window.innerHeight;
-            return -(track.scrollHeight - viewportH * 0.75);
-          },
+          y: () => -(track.scrollHeight - window.innerHeight * 0.75),
           ease: "none",
           scrollTrigger: {
             trigger: section,
@@ -93,11 +91,6 @@ export default function Technologies({
       );
 
       // ---- Master: ribbon viva + step activo según progreso ----
-      const setX = gsap.quickTo(wrap, "x", { duration: 0.18, ease: "power3.out" });
-      const setY = gsap.quickTo(wrap, "y", { duration: 0.18, ease: "power3.out" });
-      const setRot = gsap.quickTo(wrap, "rotate", { duration: 0.22, ease: "power3.out" });
-      const setScale = gsap.quickTo(wrap, "scale", { duration: 0.18, ease: "power3.out" });
-
       const master = ScrollTrigger.create({
         trigger: section,
         scroller,
@@ -111,7 +104,6 @@ export default function Technologies({
           const velN = gsap.utils.clamp(-1, 1, velocity / 1600);
           const velAbs = Math.min(1, Math.abs(velN));
 
-          // ribbon viva (lateral)
           const oscillations = 2.0;
           const s = Math.sin(p * Math.PI * 2 * oscillations);
 
@@ -204,8 +196,8 @@ export default function Technologies({
               );
             }
 
-            lastActiveIdx = activeIdx;
-          }
+          // step activo (1 por tramo)
+          const idx = Math.min(total - 1, Math.floor(p * total));
 
           items.forEach((el, i) => {
             const active = canReveal && i === activeIdx;
@@ -228,6 +220,7 @@ export default function Technologies({
 
       return () => {
         master.kill();
+        dashTween.kill();
       };
     }, section);
 
@@ -235,9 +228,13 @@ export default function Technologies({
   }, [scrollContainerRef]);
 
   return (
-    <section ref={sectionRef} id="technologies" className="relative min-h-[360vh] w-screen bg-black">
+    <section
+      ref={sectionRef}
+      id="technologies"
+      className="relative min-h-[360vh] w-screen bg-black"
+    >
       <div className="sticky top-0 h-screen overflow-hidden flex items-center justify-center px-6">
-        <div ref={stageRef} className="relative w-full max-w-6xl h-[90vh]">
+        <div className="relative w-full max-w-6xl h-[90vh]">
           {/* title */}
           <div className="absolute inset-x-0 top-6 text-center z-20">
             <h3 className="text-white/90 text-xl md:text-2xl tracking-tight">
@@ -245,15 +242,16 @@ export default function Technologies({
             </h3>
           </div>
 
-          {/* ribbon */}
           <div
             ref={ribbonWrapRef}
             className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10"
             aria-hidden="true"
           >
             <svg
-              viewBox="0 0 520 1400"
-              className="opacity-95 drop-shadow-[0_0_60px_rgba(255,255,255,0.22)] w-[min(98vw,1100px)] h-[min(140vh,1100px)]"
+              width="520"
+              height="520"
+              viewBox="0 0 520 520"
+              className="opacity-95 drop-shadow-[0_0_40px_rgba(255,255,255,0.2)]"
             >
               <path
                 ref={ribbonPathRef}
@@ -264,19 +262,14 @@ export default function Technologies({
                    C 120 1360, 120 1560, 360 1700"
                 fill="none"
                 stroke="#ffffff"
-                strokeWidth="44"
+                strokeWidth="30"
                 strokeLinecap="round"
                 strokeLinejoin="round"
               />
             </svg>
           </div>
 
-          {/* track (alto) que se mueve) */}
-          <div
-            ref={trackRef}
-            className="absolute left-0 right-0 top-24 bottom-10 z-20"
-          >
-            {/* hacemos el track alto */}
+          <div ref={trackRef} className="absolute left-0 right-0 top-24 bottom-10 z-20">
             <div className="relative h-[220vh]">
               {steps.map((t, i) => (
                 <TimelineStep
@@ -284,7 +277,6 @@ export default function Technologies({
                   side={t.side}
                   label={t.label}
                   icon={t.icon}
-                  // cada step a una altura diferente
                   top={`${i * 30 + 5}%`}
                 />
               ))}
@@ -315,7 +307,6 @@ function TimelineStep({
         // altura distinta
       ].join(" ")}
       style={{ top }}
-      data-side={side}
     >
       <div
         className={[

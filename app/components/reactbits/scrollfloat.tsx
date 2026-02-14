@@ -8,10 +8,10 @@ gsap.registerPlugin(ScrollTrigger);
 
 interface ScrollFloatProps {
   children: ReactNode;
-  scrollContainerRef?: RefObject<HTMLElement>;
+  scrollContainerRef?: RefObject<HTMLElement | null>; // ✅ CAMBIO
   containerClassName?: string;
   textClassName?: string;
-  sizeClassName?: string; // opcional por si quieres controlar tamaño aquí
+  sizeClassName?: string;
   animationDuration?: number;
   ease?: string;
   scrollStart?: string;
@@ -24,7 +24,7 @@ const ScrollFloat: React.FC<ScrollFloatProps> = ({
   scrollContainerRef,
   containerClassName = "",
   textClassName = "",
-  sizeClassName = "", // si lo dejas vacío, hereda del wrapper de fuera
+  sizeClassName = "",
   animationDuration = 1,
   ease = "back.inOut(2)",
   scrollStart = "center bottom+=50%",
@@ -48,7 +48,6 @@ const ScrollFloat: React.FC<ScrollFloatProps> = ({
 
     const scroller = scrollContainerRef?.current ?? window;
 
-    // ✅ Contexto: todo lo que se cree aquí se revierte solo en este componente
     const ctx = gsap.context(() => {
       const charElements = el.querySelectorAll<HTMLElement>(".word");
 
@@ -88,7 +87,6 @@ const ScrollFloat: React.FC<ScrollFloatProps> = ({
 
   return (
     <h2 ref={containerRef} className={`my-5 overflow-hidden ${containerClassName}`}>
-      {/* OJO: NO fuerces clamp aquí si quieres controlarlo desde fuera */}
       <span className={`inline-block ${sizeClassName} ${textClassName}`}>
         {splitText}
       </span>

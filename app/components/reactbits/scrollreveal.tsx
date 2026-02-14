@@ -8,7 +8,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 interface ScrollRevealProps {
   children: ReactNode;
-  scrollContainerRef?: RefObject<HTMLElement>;
+  scrollContainerRef?: RefObject<HTMLElement | null>; // ✅ CAMBIO
   enableBlur?: boolean;
   baseOpacity?: number;
   baseRotation?: number;
@@ -46,7 +46,6 @@ const ScrollReveal: React.FC<ScrollRevealProps> = ({
   const text = useMemo(() => extractText(children), [children]);
 
   const splitText = useMemo(() => {
-    // separa manteniendo espacios
     return text.split(/(\s+)/).map((word, index) => {
       if (word.match(/^\s+$/)) return word;
       return (
@@ -63,7 +62,6 @@ const ScrollReveal: React.FC<ScrollRevealProps> = ({
 
     const scroller = scrollContainerRef?.current ?? window;
 
-    // Animación rotación contenedor
     const rotTween = gsap.fromTo(
       el,
       { transformOrigin: "0% 50%", rotate: baseRotation },
@@ -82,7 +80,6 @@ const ScrollReveal: React.FC<ScrollRevealProps> = ({
 
     const wordElements = el.querySelectorAll<HTMLElement>(".word");
 
-    // Opacidad por palabras
     const opacityTween = gsap.fromTo(
       wordElements,
       { opacity: baseOpacity, willChange: "opacity, filter, transform" },
@@ -100,7 +97,6 @@ const ScrollReveal: React.FC<ScrollRevealProps> = ({
       }
     );
 
-    // Blur opcional
     let blurTween: gsap.core.Tween | null = null;
     if (enableBlur) {
       blurTween = gsap.fromTo(
@@ -121,7 +117,6 @@ const ScrollReveal: React.FC<ScrollRevealProps> = ({
       );
     }
 
-    // refresh para scrollers custom
     ScrollTrigger.refresh();
 
     return () => {
@@ -144,12 +139,7 @@ const ScrollReveal: React.FC<ScrollRevealProps> = ({
 
   return (
     <div ref={containerRef} className={`my-5 ${containerClassName}`}>
-      {/* IMPORTANTE: aquí NO re-renderizamos children, renderizamos el texto spliteado */}
-      <p
-        className={`leading-[1.5] font-semibold ${textClassName}`}
-      >
-        {splitText}
-      </p>
+      <p className={`leading-[1.5] font-semibold ${textClassName}`}>{splitText}</p>
     </div>
   );
 };
