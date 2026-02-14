@@ -87,37 +87,31 @@ export default function Technologies({
       );
 
       const items = gsap.utils.toArray<HTMLElement>("[data-tech-step]");
-      const total = items.length;
+
 
       gsap.set(items, {
         opacity: 0,
-        y: 40,
-        scale: 0.9,
+        y: 30,
+        x: (i) => (steps[i]?.side === "left" ? -40 : 40),
+        scale: 0.95,
         filter: "blur(12px)",
       });
 
-      ScrollTrigger.create({
-        trigger: section,
-        scroller,
-        start: "top top",
-        end: "bottom bottom",
-        scrub: true,
-        onUpdate: (self) => {
-          const idx = Math.min(total - 1, Math.floor(self.progress * total));
-
-          items.forEach((el, i) => {
-            const active = i === idx;
-
-            gsap.to(el, {
-              opacity: active ? 1 : 0,
-              y: active ? 0 : 40,
-              scale: active ? 1 : 0.9,
-              filter: active ? "blur(0px)" : "blur(12px)",
-              duration: 0.25,
-              overwrite: "auto",
-              ease: "power2.out",
-            });
-          });
+      gsap.to(items, {
+        opacity: 1,
+        y: 0,
+        x: 0,
+        scale: 1,
+        filter: "blur(0px)",
+        ease: "power2.out",
+        duration: 0.6,
+        stagger: 0.7,
+        scrollTrigger: {
+          trigger: section,
+          scroller,
+          start: "top top",
+          end: "bottom bottom",
+          scrub: true,
         },
       });
 
@@ -125,7 +119,7 @@ export default function Technologies({
     }, section);
 
     return () => ctx.revert();
-  }, [scrollContainerRef]);
+  }, [scrollContainerRef, steps]);
 
   return (
     <section
@@ -152,9 +146,10 @@ export default function Technologies({
 
           {/* 💎 Steps alternando lado */}
           <div className="absolute inset-0">
-            {steps.map((s) => (
+            {steps.map((s, index) => (
               <TechStep
                 key={s.id}
+                index={index}
                 side={s.side}
                 label={s.label}
                 icon={s.icon}
@@ -175,19 +170,24 @@ export default function Technologies({
 }
 
 function TechStep({
+  index,
   side,
   label,
   icon,
 }: {
+  index: number;
   side: "left" | "right";
   label: string;
   icon: React.ReactNode;
 }) {
+  const topPosition = 14 + index * 7;
+
   return (
     <div
       data-tech-step
+      style={{ top: `${topPosition}%` }}
       className={[
-        "absolute top-1/2 -translate-y-1/2",
+        "absolute",
         side === "left" ? "left-0" : "right-0",
       ].join(" ")}
     >
