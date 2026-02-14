@@ -180,7 +180,7 @@ function TechStep({
   label: string;
   icon: React.ReactNode;
 }) {
-  const topPosition = 14 + index * 7;
+  const topPosition = 8 + index * 30;
 
   return (
     <div
