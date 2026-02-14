@@ -6,6 +6,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Home from "@/app/components/Home";
 import About from "@/app/components/About";
 import Technologies from "@/app/components/technologies";
+// import Projects from "@/app/components/projects";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -16,45 +17,54 @@ export default function Page() {
     const el = mainRef.current;
     if (!el) return;
 
-    // Tell ScrollTrigger that THIS div is the scroller, not the window
+    // ✅ Set this div as the default scroller for ALL ScrollTriggers
     ScrollTrigger.defaults({ scroller: el });
 
-    // Needed so ScrollTrigger reads scrollTop from the div correctly
+    // ✅ Proxy for overflow scroll containers
     ScrollTrigger.scrollerProxy(el, {
       scrollTop(value) {
-        if (arguments.length && value !== undefined) {
-          el.scrollTop = value;
-        }
+        if (arguments.length && value !== undefined) el.scrollTop = value;
         return el.scrollTop;
       },
       getBoundingClientRect() {
-        return { top: 0, left: 0, width: el.clientWidth, height: el.clientHeight };
+        return {
+          top: 0,
+          left: 0,
+          width: el.clientWidth,
+          height: el.clientHeight,
+        };
       },
-      // Important: pinType must be "fixed" for overflow scroll containers
-      pinType: el.style.transform ? "transform" : "fixed",
+      pinType: "fixed",
     });
 
-    // Sync ScrollTrigger when the div scrolls
+    // ✅ Keep ScrollTrigger synced
     const onScroll = () => ScrollTrigger.update();
     el.addEventListener("scroll", onScroll, { passive: true });
 
+    // ✅ Refresh after proxy is set
     ScrollTrigger.refresh();
 
     return () => {
       el.removeEventListener("scroll", onScroll);
-      ScrollTrigger.defaults({ scroller: window });
+
+      // ✅ Kill ONLY triggers created in this page
+      ScrollTrigger.getAll().forEach((t) => t.kill());
+      ScrollTrigger.clearScrollMemory();
+
+      // ✅ Restore defaults
+      ScrollTrigger.defaults({ scroller: window as any });
     };
   }, []);
 
   return (
     <main
       ref={mainRef}
-      // Remove scroll-smooth — it fights with scrub
       className="h-screen w-screen overflow-y-scroll overflow-x-hidden overscroll-none"
     >
       <Home />
       <About scrollContainerRef={mainRef} />
       <Technologies scrollContainerRef={mainRef} />
+      {/* <Projects scrollContainerRef={mainRef} /> */}
     </main>
   );
 }
