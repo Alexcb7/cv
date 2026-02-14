@@ -10,7 +10,7 @@ export default function SplineScene() {
   return (
     <div className="absolute inset-0 z-0  pointer-events-none">
       <Spline
-        scene="https://prod.spline.design/ciA9LoJBoNucyD0D/scene.splinecode"
+        scene="https://prod.spline.design/ciA9LoJBoNucyD0D/scene.splinecode" 
         className="h-full w-full"
       />
     </div>
