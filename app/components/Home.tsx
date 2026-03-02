@@ -9,7 +9,7 @@ export default function Home() {
   return (
     <section
       id="home"
-      className="relative isolate w-screen min-h-screen overflow-hidden bg-black"
+      className="relative isolate w-screen h-screen overflow-hidden bg-black"
     >
       {/* Header SOLO en Home */}
       <div className="absolute top-0 left-0 w-full z-50">
@@ -71,7 +71,7 @@ export default function Home() {
       </div>
 
       {/* Contenido */}
-      <div className="relative z-20 flex min-h-screen items-center justify-center px-8 text-center text-white">
+      <div className="relative z-20 flex h-full items-center justify-center px-8 text-center text-white">
         <div>
           <p className="mb-4 text-sm uppercase tracking-widest text-white/70">
             Alex Cortell

@@ -64,63 +64,19 @@ export default function Projects({
   scrollContainerRef: RefObject<HTMLElement | null>;
 }) {
   const sectionRef = useRef<HTMLElement>(null);
-  const viewportRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
 
   const projects = useMemo<Project[]>(() => PROJECTS.slice(0, 5), []);
 
   useEffect(() => {
     const section = sectionRef.current;
-    const viewport = viewportRef.current;
     const track = trackRef.current;
     const scroller = scrollContainerRef.current;
 
-    if (!section || !viewport || !track || !scroller || projects.length < 2)
-      return;
+    if (!section || !track || !scroller || projects.length < 2) return;
 
     const ctx = gsap.context(() => {
-      // Fijar el viewport mientras la sección está visible
-      ScrollTrigger.create({
-        trigger: section,
-        scroller,
-        start: "top top",
-        end: "bottom bottom",
-        onEnter: () =>
-          gsap.set(viewport, {
-            position: "fixed",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100vh",
-          }),
-        onEnterBack: () =>
-          gsap.set(viewport, {
-            position: "fixed",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100vh",
-          }),
-        onLeave: () =>
-          gsap.set(viewport, {
-            position: "absolute",
-            top: "auto",
-            bottom: 0,
-            left: 0,
-            width: "100%",
-            height: "100vh",
-          }),
-        onLeaveBack: () =>
-          gsap.set(viewport, {
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100vh",
-          }),
-      });
-
-      // Mover el track horizontalmente con el scroll vertical
+      // Only animate the track horizontally — the viewport is sticky via CSS (no CLS)
       gsap.to(track, {
         x: () => -(window.innerWidth * (projects.length - 1)),
         ease: "none",
@@ -130,11 +86,6 @@ export default function Projects({
           start: "top top",
           end: "bottom bottom",
           scrub: 0.6,
-          snap: {
-            snapTo: 1 / (projects.length - 1),
-            duration: { min: 0.2, max: 0.5 },
-            ease: "power1.inOut",
-          },
           invalidateOnRefresh: true,
         },
       });
@@ -152,10 +103,8 @@ export default function Projects({
       className="relative w-screen bg-black"
       style={{ height: `${projects.length * 100}vh` }}
     >
-      <div
-        ref={viewportRef}
-        className="absolute top-0 left-0 w-full h-screen overflow-hidden"
-      >
+      {/* sticky instead of JS fixed/absolute toggling = zero CLS */}
+      <div className="sticky top-0 left-0 w-full h-screen overflow-hidden">
         <div className="absolute top-8 left-6 md:left-12 z-10">
           <h2 className="text-white text-4xl md:text-6xl font-bold tracking-tight">
             Projects

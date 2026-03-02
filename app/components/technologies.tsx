@@ -115,21 +115,7 @@ export default function Technologies({
     if (!section || !bandWrap || !band || !scroller) return;
 
     const ctx = gsap.context(() => {
-      // Barra fija mientras estás dentro de la sección
-      ScrollTrigger.create({
-        trigger: section,
-        scroller,
-        start: "top top",
-        end: "bottom bottom",
-        onEnter: () =>
-          gsap.set(bandWrap, { position: "fixed", top: 0, left: 0, width: "100%" }),
-        onEnterBack: () =>
-          gsap.set(bandWrap, { position: "fixed", top: 0, left: 0, width: "100%" }),
-        onLeave: () =>
-          gsap.set(bandWrap, { position: "absolute", bottom: 0, left: 0, width: "100%" }),
-        onLeaveBack: () =>
-          gsap.set(bandWrap, { position: "absolute", top: 0, left: 0, width: "100%" }),
-      });
+      // bandWrap is sticky via CSS — no JS position toggling needed (zero CLS)
 
       // Movimiento sutil vertical de la barra
       gsap.fromTo(
@@ -180,9 +166,9 @@ export default function Technologies({
         const dot      = row.querySelector<HTMLElement>("[data-tech-dot]");
         const indexNum = row.querySelector<HTMLElement>("[data-tech-index]");
 
-        // Estado inicial
-        if (content)  gsap.set(content,  { opacity: 0, x: fromX, y: 8, filter: "blur(10px)" });
-        if (label)    gsap.set(label,    { opacity: 0, y: 6, filter: "blur(8px)" });
+        // Estado inicial — sin blur (costoso para GPU)
+        if (content)  gsap.set(content,  { opacity: 0, x: fromX, y: 8 });
+        if (label)    gsap.set(label,    { opacity: 0, y: 6 });
         if (dot)      gsap.set(dot,      { scale: 0, opacity: 0 });
         if (indexNum) gsap.set(indexNum, { opacity: 0 });
 
@@ -196,8 +182,8 @@ export default function Technologies({
           },
         });
 
-        if (content)  tl.to(content,  { opacity: 1, x: 0, y: 0, filter: "blur(0px)", ease: "power2.out" });
-        if (label)    tl.to(label,    { opacity: 1, y: 0, filter: "blur(0px)", ease: "power2.out" }, 0.08);
+        if (content)  tl.to(content,  { opacity: 1, x: 0, y: 0, ease: "power2.out" });
+        if (label)    tl.to(label,    { opacity: 1, y: 0, ease: "power2.out" }, 0.08);
         if (dot)      tl.to(dot,      { scale: 1, opacity: 1, ease: "back.out(1.7)" }, 0.1);
         if (indexNum) tl.to(indexNum, { opacity: 1, ease: "none" }, 0.15);
       });
@@ -214,10 +200,10 @@ export default function Technologies({
       id="tech"
       className="relative w-screen bg-black py-28"
     >
-      {/* Barra flotante */}
+      {/* Barra flotante — sticky en vez de JS fixed/absolute (zero CLS) */}
       <div
         ref={bandWrapRef}
-        className="pointer-events-none absolute inset-x-0 top-0 z-20"
+        className="pointer-events-none sticky top-0 inset-x-0 z-20 h-0"
       >
         <div className="relative h-screen">
           <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
