@@ -7,6 +7,7 @@ import Home from "@/app/components/Home";
 import About from "@/app/components/About";
 import Technologies from "@/app/components/technologies";
 import Projects from "@/app/components/projects";
+import Contact from "@/app/components/contact";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -57,6 +58,7 @@ export default function Page() {
       <About scrollContainerRef={mainRef} />
       <Technologies scrollContainerRef={mainRef} />
       <Projects scrollContainerRef={mainRef} />
+      <Contact scrollContainerRef={mainRef} />
     </main>
   );
 }

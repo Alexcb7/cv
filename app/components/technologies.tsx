@@ -198,7 +198,7 @@ export default function Technologies({
     <section
       ref={sectionRef}
       id="tech"
-      className="relative w-screen bg-black py-28"
+      className="relative w-screen bg-black py-28 overflow-y-clip"
     >
       {/* Barra flotante — sticky en vez de JS fixed/absolute (zero CLS) */}
       <div
