@@ -40,7 +40,7 @@ export default function Home() {
 
         {/* redes */}
         <a
-          href="https://instagram.com/"
+          href="https://www.instagram.com/alxdevstudio/"
           target="_blank"
           rel="noreferrer"
           className="text-white/60 hover:text-white transition-colors"
@@ -50,7 +50,7 @@ export default function Home() {
         </a>
 
         <a
-          href="https://linkedin.com/"
+          href="https://www.linkedin.com/in/alexcortell/"
           target="_blank"
           rel="noreferrer"
           className="text-white/60 hover:text-white transition-colors"
@@ -60,7 +60,7 @@ export default function Home() {
         </a>
 
         <a
-          href="https://github.com/"
+          href="https://github.com/Alxstudio"
           target="_blank"
           rel="noreferrer"
           className="text-white/60 hover:text-white transition-colors"
@@ -82,7 +82,7 @@ export default function Home() {
           </h1>
 
           <p className="mt-4 text-2xl md:text-3xl text-white/80">
-            UI & UX Designer
+            Exploring AI Engineering
           </p>
         </div>
       </div>

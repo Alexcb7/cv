@@ -36,13 +36,51 @@ export default function Page() {
       pinType: "fixed",
     });
 
-    const onScroll = () => ScrollTrigger.update();
+    let targetScroll = 0;
+    let currentScroll = 0;
+    let smoothing = false;
+
+    const onWheel = (e: WheelEvent) => {
+      if (e.ctrlKey) return;
+      e.preventDefault();
+      smoothing = true;
+      targetScroll = Math.max(
+        0,
+        Math.min(targetScroll + e.deltaY, el.scrollHeight - el.clientHeight)
+      );
+    };
+
+    const tick = () => {
+      if (!smoothing) return;
+      const diff = targetScroll - currentScroll;
+      if (Math.abs(diff) < 0.5) {
+        currentScroll = targetScroll;
+        smoothing = false;
+      } else {
+        currentScroll += diff * 0.1;
+      }
+      el.scrollTop = currentScroll;
+      ScrollTrigger.update();
+    };
+
+    const onScroll = () => {
+      if (!smoothing) {
+        targetScroll = el.scrollTop;
+        currentScroll = el.scrollTop;
+      }
+      ScrollTrigger.update();
+    };
+
+    el.addEventListener("wheel", onWheel, { passive: false });
     el.addEventListener("scroll", onScroll, { passive: true });
+    gsap.ticker.add(tick);
 
     ScrollTrigger.refresh();
 
     return () => {
+      el.removeEventListener("wheel", onWheel);
       el.removeEventListener("scroll", onScroll);
+      gsap.ticker.remove(tick);
       ScrollTrigger.getAll().forEach((t) => t.kill());
       ScrollTrigger.clearScrollMemory();
       ScrollTrigger.defaults({ scroller: window as any });
@@ -58,6 +96,7 @@ export default function Page() {
       <About scrollContainerRef={mainRef} />
       <Technologies scrollContainerRef={mainRef} />
       <Projects scrollContainerRef={mainRef} />
+      <div className="h-[60vh] bg-black" />
       <Contact scrollContainerRef={mainRef} />
     </main>
   );

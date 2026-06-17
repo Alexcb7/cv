@@ -16,6 +16,7 @@ export default function SplineScene() {
         scene="https://prod.spline.design/ciA9LoJBoNucyD0D/scene.splinecode"
         style={{ width: "100%", height: "100%", display: "block" }}
       />
+      <div className="absolute bottom-0 right-0 w-64 h-14 bg-black z-10" />
     </div>
   );
 }

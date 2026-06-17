@@ -9,7 +9,7 @@ import React, {
 } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { FaReact, FaCss3Alt, FaJsSquare } from "react-icons/fa";
+import { FaReact, FaJsSquare } from "react-icons/fa";
 import {
   SiTailwindcss,
   SiSupabase,
@@ -23,7 +23,6 @@ type Step = {
   id: string;
   label: string;
   description: string;
-  years: string;
   icon: React.ReactNode;
   side: "left" | "right";
   color: string;
@@ -45,7 +44,6 @@ export default function Technologies({
         id: "react",
         label: "React",
         description: "UI components & state management",
-        years: "1 yrs",
         icon: <FaReact />,
         color: "#61DAFB",
       },
@@ -53,7 +51,6 @@ export default function Technologies({
         id: "next",
         label: "Next.js",
         description: "SSR, routing & full-stack apps",
-        years: "1 yrs",
         icon: <SiNextdotjs />,
         color: "#ffffff",
       },
@@ -61,7 +58,6 @@ export default function Technologies({
         id: "ts",
         label: "TypeScript",
         description: "Static typing & safer codebases",
-        years: "1 yrs",
         icon: <SiTypescript />,
         color: "#3178C6",
       },
@@ -69,23 +65,13 @@ export default function Technologies({
         id: "js",
         label: "JavaScript",
         description: "Core language, async patterns, DOM",
-        years: "2 yrs",
         icon: <FaJsSquare />,
         color: "#F7DF1E",
-      },
-      {
-        id: "css",
-        label: "CSS",
-        description: "Animations, layouts & custom design",
-        years: "2 yrs",
-        icon: <FaCss3Alt />,
-        color: "#1572B6",
       },
       {
         id: "tailwind",
         label: "Tailwind",
         description: "Utility-first rapid styling",
-        years: "1 yrs",
         icon: <SiTailwindcss />,
         color: "#38BDF8",
       },
@@ -93,7 +79,6 @@ export default function Technologies({
         id: "supabase",
         label: "Supabase",
         description: "Auth, database & realtime backend",
-        years: "1 yr",
         icon: <SiSupabase />,
         color: "#3ECF8E",
       },
@@ -239,7 +224,6 @@ export default function Technologies({
               side={s.side}
               label={s.label}
               description={s.description}
-              years={s.years}
               icon={s.icon}
               color={s.color}
               index={i}
@@ -248,7 +232,7 @@ export default function Technologies({
         </div>
       </div>
 
-      <div className="h-[30vh]" />
+      <div className="h-[70vh]" />
     </section>
   );
 }
@@ -257,7 +241,6 @@ function TechRow({
   side,
   label,
   description,
-  years,
   icon,
   color,
   index,
@@ -265,7 +248,6 @@ function TechRow({
   side: "left" | "right";
   label: string;
   description: string;
-  years: string;
   icon: React.ReactNode;
   color: string;
   index: number;
@@ -350,27 +332,13 @@ function TechRow({
               {label}
             </div>
 
-            <div className="flex flex-col gap-1">
-              <p
-                className={`text-white/40 text-sm md:text-base font-light tracking-wide ${
-                  side === "right" ? "ml-auto" : ""
-                }`}
-              >
-                {description}
-              </p>
-              <span
-                className={`text-[11px] font-mono tracking-[0.2em] uppercase px-2 py-0.5 rounded-full border w-fit ${
-                  side === "right" ? "ml-auto" : ""
-                }`}
-                style={{
-                  color: color,
-                  borderColor: `${color}40`,
-                  background: `${color}10`,
-                }}
-              >
-                {years}
-              </span>
-            </div>
+            <p
+              className={`text-white/65 text-sm md:text-base font-light tracking-wide ${
+                side === "right" ? "ml-auto" : ""
+              }`}
+            >
+              {description}
+            </p>
           </div>
         </div>
       </div>
