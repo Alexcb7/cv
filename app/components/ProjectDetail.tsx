@@ -82,14 +82,11 @@ export default function ProjectDetail({ project, onClose }: Props) {
         <div className="w-[38%] shrink-0 flex flex-col border-r border-white/8">
 
           {/* Image */}
-          <div className="relative w-full h-55 shrink-0">
-            <Image
-              src={project.image}
-              alt={project.title}
-              fill
-              className="object-cover"
-              style={{ objectPosition: project.objectPosition ?? "center" }}
-            />
+          <div className="relative w-full h-55 shrink-0 bg-black">
+            {project.image
+              ? <Image src={project.image} alt={project.title} fill className="object-cover" style={{ objectPosition: project.objectPosition ?? "center" }} />
+              : <div className="absolute inset-0 p-8"><Image src="/images/logo-blanco.png" alt="logo" fill className="object-contain opacity-50" /></div>
+            }
             <div className="absolute inset-0 bg-linear-to-t from-black/75 via-black/10 to-transparent" />
             {project.duration && (
               <span className="absolute bottom-5 right-6 flex items-center gap-1.5 text-white text-[10px] font-mono tracking-[0.2em] uppercase">

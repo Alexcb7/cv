@@ -13,7 +13,7 @@ export type StackGroup = { label: string; items: string[] };
 export type Project = {
   id: string;
   title: string;
-  image: string;
+  image?: string;
   url?: string;
   objectPosition?: string;
   stackGroups?: StackGroup[];
@@ -52,27 +52,41 @@ const PROJECTS: Project[] = [
   },
   {
     id: "02",
-    title: "Project Two",
-    image: "/images/project 2.webp",
-    url: "https://example.com",
+    title: "Sedentaris Page",
+    url: "https://sedentaris-website.vercel.app/",
+    repo: "https://github.com/Alxstudio/sedentaris-website",
+    duration: "2 months",
+    stackGroups: [
+      { label: "Frontend",    items: ["React", "TypeScript", "Tailwind"] },
+      { label: "Backend",     items: ["Supabase", "PostgreSQL"] },
+      { label: "AI Resources", items: ["Claude Haiku"] },
+      { label: "Deployment",  items: ["Vercel"] },
+    ],
+    description:
+      "Sedentaris Page is a modern landing page designed to showcase a fitness and wellness brand focused on helping sedentary people build healthier habits. The project involved designing and developing a fully responsive, visually engaging web presence with smooth animations, clear calls to action, and an optimized user experience from first scroll to conversion.",
+    highlights: [
+      "Fully responsive layout optimized for mobile, tablet, and desktop viewports",
+      "Custom animation system built with Framer Motion for smooth section transitions",
+      "Integrated contact form connected to a Supabase backend for lead capture",
+      "Performance-optimized with lazy loading and Next.js image optimization",
+    ],
+    challenges:
+      "The main challenge was translating a brand identity into a cohesive digital experience without a pre-existing design system. I had to make decisions on typography, spacing, and color from scratch while keeping the result consistent and professional. Balancing visual richness with fast load times also required careful optimization of assets and animation timing.",
   },
   {
     id: "03",
     title: "Project Three",
     image: "/images/project 3.webp",
-    url: "https://example.com",
   },
   {
     id: "04",
     title: "Project Four",
     image: "/images/project 4.png",
-    url: "https://example.com",
   },
   {
     id: "05",
     title: "Project Five",
     image: "/images/pro5.avif",
-    url: "https://example.com",
   },
 ];
 
@@ -183,17 +197,28 @@ function ProjectCard({
               clipPath: expanded ? "inset(0% round 0px)" : "inset(17.5% 20% round 16px)",
             }}
           >
-            <Image
-              src={project.image}
-              alt={project.title}
-              fill
-              className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.25,0.46,0.45,0.94)]"
-              style={{
-                objectPosition: project.objectPosition ?? "center",
-                transform: expanded ? "scale(1.1)" : "scale(1)",
-              }}
-              sizes="(max-width: 768px) 88vw, 980px"
-            />
+            {project.image ? (
+              <Image
+                src={project.image}
+                alt={project.title}
+                fill
+                className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.25,0.46,0.45,0.94)]"
+                style={{
+                  objectPosition: project.objectPosition ?? "center",
+                  transform: expanded ? "scale(1.1)" : "scale(1)",
+                }}
+                sizes="(max-width: 768px) 88vw, 980px"
+              />
+            ) : (
+              <div className="absolute inset-0 bg-black">
+                <div
+                  className="absolute inset-0 p-12 transition-transform duration-700 ease-[cubic-bezier(0.25,0.46,0.45,0.94)]"
+                  style={{ transform: expanded ? "scale(1.15)" : "scale(1)" }}
+                >
+                  <Image src="/images/logo-blanco.png" alt="logo" fill className="object-contain opacity-50" />
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
