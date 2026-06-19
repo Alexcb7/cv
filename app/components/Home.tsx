@@ -78,7 +78,7 @@ export default function Home() {
           </p>
 
           <h1 className="text-6xl md:text-7xl font-bold leading-tight">
-            Full-Stack Developer
+            Web App Developer
           </h1>
 
           <p className="mt-4 text-2xl md:text-3xl text-white/80">

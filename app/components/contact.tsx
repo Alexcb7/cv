@@ -1,10 +1,57 @@
 "use client";
 
 import { useEffect, useRef, useState, type RefObject } from "react";
+import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
+
+function Logo3D() {
+  const [tilt, setTilt] = useState({ x: 0, y: 0 });
+  const floatRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = floatRef.current;
+    if (!el) return;
+    gsap.to(el, {
+      y: -18,
+      duration: 2.4,
+      ease: "power1.inOut",
+      yoyo: true,
+      repeat: -1,
+    });
+  }, []);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width;
+    const y = (e.clientY - rect.top) / rect.height;
+    setTilt({ x: (y - 0.5) * -30, y: (x - 0.5) * 30 });
+  };
+
+  const handleMouseLeave = () => setTilt({ x: 0, y: 0 });
+
+  return (
+    <div className="flex items-center justify-center w-full h-full">
+      <div ref={floatRef}>
+        <div
+          onMouseMove={handleMouseMove}
+          onMouseLeave={handleMouseLeave}
+          className="relative w-80 h-80"
+          style={{
+            transform: `perspective(900px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)`,
+            transition: tilt.x === 0 && tilt.y === 0
+              ? "transform 0.8s cubic-bezier(0.25,0.46,0.45,0.94)"
+              : "transform 0.1s ease",
+          }}
+        >
+          <Image src="/images/logo_blanco.png" alt="logo" fill className="object-contain" />
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function Contact({
   scrollContainerRef,
@@ -61,8 +108,7 @@ export default function Contact({
       className="relative w-screen h-screen bg-black flex items-center"
     >
       {/* Left half — form */}
-      <div className="w-full md:w-1/2 h-full flex flex-col justify-center items-center px-8 md:px-20 lg:px-28">
-        <div className="w-full max-w-md">
+      <div className="w-full md:w-[58%] h-full flex flex-col justify-center px-10 md:px-20 lg:px-28">
         <div data-contact-anim className="mb-10">
           <h2 className="text-white text-5xl md:text-6xl font-bold tracking-tight">
             Let&apos;s work
@@ -72,7 +118,7 @@ export default function Contact({
           <div className="w-12 h-px bg-white/20 mt-5" />
         </div>
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-5 max-w-md">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-5">
           <div data-contact-anim>
             <label
               htmlFor="name"
@@ -85,6 +131,7 @@ export default function Contact({
               name="name"
               type="text"
               required
+              autoComplete="off"
               placeholder="Your name"
               className="
                 w-full bg-transparent border-b border-white/15
@@ -108,6 +155,7 @@ export default function Contact({
               name="email"
               type="email"
               required
+              autoComplete="off"
               placeholder="your@email.com"
               className="
                 w-full bg-transparent border-b border-white/15
@@ -131,19 +179,19 @@ export default function Contact({
               name="message"
               required
               rows={3}
+              autoComplete="off"
               placeholder="Tell me about your project..."
               className="
                 w-full bg-transparent border-b border-white/15
-                text-white text-base py-3 px-0
+                text-white text-base py-3 px-0 resize-none
                 placeholder:text-white/60
                 focus:border-white/50 focus:outline-none
                 transition-colors duration-300
-                resize-y overflow-hidden
               "
             />
           </div>
 
-          <div>
+          <div data-contact-anim>
             <button
               type="submit"
               disabled={sent}
@@ -162,11 +210,12 @@ export default function Contact({
             </button>
           </div>
         </form>
-        </div>
       </div>
 
-      {/* Right half — free for future content */}
-      <div className="hidden md:block w-1/2 h-full" />
+      {/* Right half — 3D logo */}
+      <div className="hidden md:block w-[42%] h-full">
+        <Logo3D />
+      </div>
     </section>
   );
 }

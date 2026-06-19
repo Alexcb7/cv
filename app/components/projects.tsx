@@ -57,21 +57,20 @@ const PROJECTS: Project[] = [
     repo: "https://github.com/Alxstudio/sedentaris-website",
     duration: "2 months",
     stackGroups: [
-      { label: "Frontend",    items: ["React", "TypeScript", "Tailwind"] },
-      { label: "Backend",     items: ["Supabase", "PostgreSQL"] },
-      { label: "AI Resources", items: ["Claude Haiku"] },
-      { label: "Deployment",  items: ["Vercel"] },
+      { label: "Frontend",   items: ["Next.js", "TypeScript", "CSS"] },
+      { label: "Backend",    items: ["Supabase"] },
+      { label: "Deployment", items: ["Vercel"] },
     ],
     description:
-      "Sedentaris Page is a modern landing page designed to showcase a fitness and wellness brand focused on helping sedentary people build healthier habits. The project involved designing and developing a fully responsive, visually engaging web presence with smooth animations, clear calls to action, and an optimized user experience from first scroll to conversion.",
+      "Sedentaris is the official website for a Catalan athletics club, completely rebuilt with a modern, marketing-focused approach. Alongside the public site — featuring a hand-crafted visual identity, club news, races, and membership information — it includes a custom backoffice (protected routes within the same Next.js app, powered by Supabase) that lets club admins manage athlete profiles, publish blog posts, and review contact form submissions without touching any code.",
     highlights: [
-      "Fully responsive layout optimized for mobile, tablet, and desktop viewports",
-      "Custom animation system built with Framer Motion for smooth section transitions",
-      "Integrated contact form connected to a Supabase backend for lead capture",
-      "Performance-optimized with lazy loading and Next.js image optimization",
+      "Complete visual and structural redesign, modernizing an outdated club website into a fast, marketing-focused experience",
+      "Fully custom design system built with hand-written CSS (no Tailwind, no component library), including a track-line motif and a gradient color palette",
+      "Custom backoffice with Supabase-backed authentication, letting non-technical club admins manage athletes, blog posts, and contact form submissions without code",
+      "Privacy-conscious, opt-in athlete profile system, letting members choose whether to be publicly featured",
     ],
     challenges:
-      "The main challenge was translating a brand identity into a cohesive digital experience without a pre-existing design system. I had to make decisions on typography, spacing, and color from scratch while keeping the result consistent and professional. Balancing visual richness with fast load times also required careful optimization of assets and animation timing.",
+      "One challenge was building a distinctive visual identity entirely from scratch without a UI framework — every public section (hero, news grid, race cards, gear showcase) was hand-coded in CSS, including custom animations and a track-line motif tied to the club's identity. The bigger technical challenge was adding a full backoffice on top of that static-first design: protected admin routes within the same Next.js app, backed by Supabase for authentication and data storage, letting club staff manage athlete profiles, publish blog posts, and review contact form submissions — all without touching code or a database client directly.",
   },
   {
     id: "03",

@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import Image from "next/image";
-import { FaGithub, FaReact, FaJsSquare, FaHourglassHalf } from "react-icons/fa";
+import { FaGithub, FaReact, FaJsSquare, FaHourglassHalf, FaCss3Alt } from "react-icons/fa";
 import {
   SiNextdotjs, SiTailwindcss, SiSupabase, SiTypescript,
   SiFastapi, SiSqlalchemy, SiPostgresql, SiFramer,
@@ -26,6 +26,7 @@ const TECH_META: Record<string, { icon: React.ReactNode; color: string }> = {
   Groq:            { icon: null,              color: "#F55036" },
   Vercel:          { icon: <SiVercel />,      color: "#ffffff" },
   Render:          { icon: <SiRender />,      color: "#46E3B7" },
+  CSS:             { icon: <FaCss3Alt />,     color: "#ffffff" },
 };
 
 const LABEL = "text-white/60 text-xs uppercase tracking-[0.25em] mb-5 block";
