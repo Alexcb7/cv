@@ -22,6 +22,7 @@ export type Project = {
   repo?: string;
   highlights?: string[];
   challenges?: string;
+  comingSoon?: boolean;
 };
 
 const PROJECTS: Project[] = [
@@ -55,7 +56,7 @@ const PROJECTS: Project[] = [
     title: "Sedentaris Page",
     url: "https://sedentaris-website.vercel.app/",
     repo: "https://github.com/Alxstudio/sedentaris-website",
-    duration: "2 months",
+    duration: "2 weeks",
     stackGroups: [
       { label: "Frontend",   items: ["Next.js", "TypeScript", "CSS"] },
       { label: "Backend",    items: ["Supabase"] },
@@ -72,21 +73,9 @@ const PROJECTS: Project[] = [
     challenges:
       "One challenge was building a distinctive visual identity entirely from scratch without a UI framework — every public section (hero, news grid, race cards, gear showcase) was hand-coded in CSS, including custom animations and a track-line motif tied to the club's identity. The bigger technical challenge was adding a full backoffice on top of that static-first design: protected admin routes within the same Next.js app, backed by Supabase for authentication and data storage, letting club staff manage athlete profiles, publish blog posts, and review contact form submissions — all without touching code or a database client directly.",
   },
-  {
-    id: "03",
-    title: "Project Three",
-    image: "/images/project 3.webp",
-  },
-  {
-    id: "04",
-    title: "Project Four",
-    image: "/images/project 4.png",
-  },
-  {
-    id: "05",
-    title: "Project Five",
-    image: "/images/pro5.avif",
-  },
+  { id: "03", title: "Project Three", comingSoon: true },
+  { id: "04", title: "Project Four",  comingSoon: true },
+  { id: "05", title: "Project Five",  comingSoon: true },
 ];
 
 export default function Projects({
@@ -175,6 +164,36 @@ function ProjectCard({
 }) {
   const [expanded, setExpanded] = useState(false);
 
+  if (project.comingSoon) {
+    return (
+      <article className="w-screen h-screen shrink-0 flex items-center justify-center px-6 md:px-12 py-20">
+        <div
+          className="
+            relative
+            w-[min(88vw,980px)] h-[min(62vh,620px)]
+            rounded-3xl overflow-hidden
+            border border-white/10 bg-black
+            shadow-[0_20px_80px_rgba(0,0,0,0.45)]
+          "
+        >
+          <Image
+            src="/images/logo_blanco.png"
+            alt="logo"
+            fill
+            placeholder="empty"
+            className="object-contain opacity-10 p-6"
+            style={{ filter: "none" }}
+          />
+          <div className="absolute inset-0 flex items-center justify-center">
+            <p className="text-white/40 text-5xl md:text-7xl font-black tracking-tighter uppercase select-none">
+              Coming soon...
+            </p>
+          </div>
+        </div>
+      </article>
+    );
+  }
+
   return (
     <article className="w-screen h-screen shrink-0 flex items-center justify-center px-6 md:px-12 py-20">
       <div
@@ -226,17 +245,6 @@ function ProjectCard({
           className="absolute inset-0 z-10 transition-[background-color] duration-500 pointer-events-none"
           style={{ background: expanded ? "rgba(0,0,0,0.55)" : "rgba(0,0,0,0)", pointerEvents: expanded ? "auto" : "none" }}
         >
-          {/* Title */}
-          <h3
-            className="absolute inset-0 flex items-center justify-center text-white text-5xl md:text-7xl font-black tracking-tighter uppercase drop-shadow-[0_4px_24px_rgba(0,0,0,0.8)] transition-[opacity,transform] duration-500 will-change-transform"
-            style={{
-              opacity: expanded ? 1 : 0,
-              transform: expanded ? "scale(1)" : "scale(0.9)",
-            }}
-          >
-            {project.title}
-          </h3>
-
           {/* Button right — View Project */}
           {project.url && (
             <a

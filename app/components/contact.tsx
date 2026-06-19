@@ -7,21 +7,22 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-function Logo3D() {
+function Logo3D({ sizeClass = "w-80 h-80", float = true }: { sizeClass?: string; float?: boolean }) {
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
   const floatRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    if (!float) return;
     const el = floatRef.current;
     if (!el) return;
     gsap.to(el, {
-      y: -18,
+      y: -8,
       duration: 2.4,
       ease: "power1.inOut",
       yoyo: true,
       repeat: -1,
     });
-  }, []);
+  }, [float]);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -33,21 +34,19 @@ function Logo3D() {
   const handleMouseLeave = () => setTilt({ x: 0, y: 0 });
 
   return (
-    <div className="flex items-center justify-center w-full h-full">
-      <div ref={floatRef}>
-        <div
-          onMouseMove={handleMouseMove}
-          onMouseLeave={handleMouseLeave}
-          className="relative w-80 h-80"
-          style={{
-            transform: `perspective(900px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)`,
-            transition: tilt.x === 0 && tilt.y === 0
-              ? "transform 0.8s cubic-bezier(0.25,0.46,0.45,0.94)"
-              : "transform 0.1s ease",
-          }}
-        >
-          <Image src="/images/logo_blanco.png" alt="logo" fill className="object-contain" />
-        </div>
+    <div ref={floatRef} className="flex items-center">
+      <div
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+        className={`relative shrink-0 ${sizeClass}`}
+        style={{
+          transform: `perspective(900px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)`,
+          transition: tilt.x === 0 && tilt.y === 0
+            ? "transform 0.8s cubic-bezier(0.25,0.46,0.45,0.94)"
+            : "transform 0.1s ease",
+        }}
+      >
+        <Image src="/images/logo_blanco.png" alt="logo" fill className="object-contain" />
       </div>
     </div>
   );
@@ -107,14 +106,20 @@ export default function Contact({
       id="contact"
       className="relative w-screen h-screen bg-black flex items-center"
     >
-      {/* Left half — form */}
-      <div className="w-full md:w-[58%] h-full flex flex-col justify-center px-10 md:px-20 lg:px-28">
-        <div data-contact-anim className="mb-10">
-          <h2 className="text-white text-5xl md:text-6xl font-bold tracking-tight">
-            Let&apos;s work
-            <br />
-            together
-          </h2>
+      <div className="flex flex-col gap-8 pl-[19%] w-[62%]">
+
+        {/* Title + small 3D logo */}
+        <div data-contact-anim>
+          <div className="flex items-center gap-12">
+            <h2 className="text-white text-5xl md:text-6xl font-bold tracking-tight leading-tight">
+              Let&apos;s work
+              <br />
+              together
+            </h2>
+            <div className="mt-6">
+              <Logo3D sizeClass="w-36 h-36" float={false} />
+            </div>
+          </div>
           <div className="w-12 h-px bg-white/20 mt-5" />
         </div>
 
@@ -134,8 +139,8 @@ export default function Contact({
               autoComplete="off"
               placeholder="Your name"
               className="
-                w-full bg-transparent border-b border-white/15
-                text-white text-base py-3 px-0
+                w-3/4 bg-transparent border-b border-white/15
+                text-white text-base py-2 px-0
                 placeholder:text-white/60
                 focus:border-white/50 focus:outline-none
                 transition-colors duration-300
@@ -158,8 +163,8 @@ export default function Contact({
               autoComplete="off"
               placeholder="your@email.com"
               className="
-                w-full bg-transparent border-b border-white/15
-                text-white text-base py-3 px-0
+                w-3/4 bg-transparent border-b border-white/15
+                text-white text-base py-2 px-0
                 placeholder:text-white/60
                 focus:border-white/50 focus:outline-none
                 transition-colors duration-300
@@ -182,8 +187,8 @@ export default function Contact({
               autoComplete="off"
               placeholder="Tell me about your project..."
               className="
-                w-full bg-transparent border-b border-white/15
-                text-white text-base py-3 px-0 resize-none
+                w-3/4 bg-transparent border-b border-white/15
+                text-white text-base py-2 px-0 resize-y min-h-18 max-h-40
                 placeholder:text-white/60
                 focus:border-white/50 focus:outline-none
                 transition-colors duration-300
@@ -210,11 +215,6 @@ export default function Contact({
             </button>
           </div>
         </form>
-      </div>
-
-      {/* Right half — 3D logo */}
-      <div className="hidden md:block w-[42%] h-full">
-        <Logo3D />
       </div>
     </section>
   );
