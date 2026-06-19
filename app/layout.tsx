@@ -12,6 +12,16 @@ const playfair = Playfair_Display({
 export const metadata: Metadata = {
   title: "Alex Portfolio",
   description: "Modern web development portfolio by Alex",
+  icons: {
+    icon: [
+      { url: "/images/favicon/favicon-96x96.png", sizes: "96x96", type: "image/png" },
+      { url: "/images/favicon/favicon.svg", type: "image/svg+xml" },
+    ],
+    shortcut: "/images/favicon/favicon.ico",
+    apple: { url: "/images/favicon/apple-touch-icon.png", sizes: "180x180" },
+  },
+  manifest: "/images/favicon/site.webmanifest",
+  appleWebApp: { title: "Alxstudio" },
 };
 
 export default function RootLayout({
