@@ -108,6 +108,7 @@ export default function Contact({
     >
       <div className="flex flex-col gap-8 pl-[19%] w-[62%]">
 
+
         {/* Title + small 3D logo */}
         <div data-contact-anim>
           <div className="flex items-center gap-12">
@@ -215,6 +216,17 @@ export default function Contact({
             </button>
           </div>
         </form>
+      </div>
+
+      {/* Right side card */}
+      <div className="flex-1 flex items-center justify-center pr-[15%]">
+        <div className="group duration-500 -rotate-12 hover:rotate-0 hover:skew-x-1 hover:translate-x-6 hover:translate-y-12 transition-all cursor-default">
+          <div className="relative rounded-2xl w-96 h-52 bg-zinc-800 text-gray-50 flex flex-col justify-center items-center gap-2
+            before:-skew-x-12 before:rounded-2xl before:absolute before:content-[''] before:bg-neutral-700 before:right-4 before:top-0 before:w-96 before:h-48 before:-z-10">
+            <span className="text-5xl font-bold">Alex Cortell</span>
+            <p className="text-white font-thin text-lg">— App Web Developer —</p>
+          </div>
+        </div>
       </div>
     </section>
   );
