@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 
 const Spline = dynamic(() => import("@splinetool/react-spline"), {
@@ -7,6 +8,23 @@ const Spline = dynamic(() => import("@splinetool/react-spline"), {
 });
 
 export default function SplineScene() {
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    if ("requestIdleCallback" in window) {
+      const id = (window as any).requestIdleCallback(
+        () => setReady(true),
+        { timeout: 3000 }
+      );
+      return () => (window as any).cancelIdleCallback(id);
+    } else {
+      const id = setTimeout(() => setReady(true), 500);
+      return () => clearTimeout(id);
+    }
+  }, []);
+
+  if (!ready) return null;
+
   return (
     <div
       className="absolute inset-0 z-0 pointer-events-none"

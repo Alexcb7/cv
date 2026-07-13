@@ -10,6 +10,7 @@ export default function Home() {
     <section
       id="home"
       className="relative isolate w-screen h-screen overflow-hidden bg-black"
+      style={{ background: "radial-gradient(ellipse at 70% 50%, #1a1a2e 0%, #000 60%)" }}
     >
       {/* Header SOLO en Home */}
       <div className="absolute top-0 left-0 w-full z-50">
