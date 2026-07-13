@@ -3,11 +3,13 @@
 import { useRef, useLayoutEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import dynamic from "next/dynamic";
 import Home from "@/app/components/Home";
 import About from "@/app/components/About";
-import Technologies from "@/app/components/technologies";
-import Projects from "@/app/components/projects";
-import Contact from "@/app/components/contact";
+
+const Technologies = dynamic(() => import("@/app/components/technologies"));
+const Projects = dynamic(() => import("@/app/components/projects"));
+const Contact = dynamic(() => import("@/app/components/contact"));
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -20,6 +22,17 @@ export default function Page() {
 
     ScrollTrigger.defaults({ scroller: el });
 
+    let cachedWidth = el.clientWidth;
+    let cachedHeight = el.clientHeight;
+    let cachedScrollHeight = el.scrollHeight;
+
+    const ro = new ResizeObserver(() => {
+      cachedWidth = el.clientWidth;
+      cachedHeight = el.clientHeight;
+      cachedScrollHeight = el.scrollHeight;
+    });
+    ro.observe(el);
+
     ScrollTrigger.scrollerProxy(el, {
       scrollTop(value) {
         if (arguments.length && value !== undefined) el.scrollTop = value;
@@ -29,8 +42,8 @@ export default function Page() {
         return {
           top: 0,
           left: 0,
-          width: el.clientWidth,
-          height: el.clientHeight,
+          width: cachedWidth,
+          height: cachedHeight,
         };
       },
       pinType: "fixed",
@@ -46,7 +59,7 @@ export default function Page() {
       smoothing = true;
       targetScroll = Math.max(
         0,
-        Math.min(targetScroll + e.deltaY, el.scrollHeight - el.clientHeight)
+        Math.min(targetScroll + e.deltaY, cachedScrollHeight - cachedHeight)
       );
     };
 
@@ -78,6 +91,7 @@ export default function Page() {
     ScrollTrigger.refresh();
 
     return () => {
+      ro.disconnect();
       el.removeEventListener("wheel", onWheel);
       el.removeEventListener("scroll", onScroll);
       gsap.ticker.remove(tick);

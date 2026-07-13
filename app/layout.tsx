@@ -31,6 +31,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <link rel="preconnect" href="https://prod.spline.design" />
+      </head>
       <body className={`${playfair.variable} antialiased`}>
         {children}
       </body>

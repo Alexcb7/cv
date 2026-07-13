@@ -10,6 +10,8 @@ gsap.registerPlugin(ScrollTrigger);
 function Logo3D({ sizeClass = "w-80 h-80", float = true }: { sizeClass?: string; float?: boolean }) {
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
   const floatRef = useRef<HTMLDivElement>(null);
+  const tiltRef = useRef<HTMLDivElement>(null);
+  const cachedRect = useRef<DOMRect | null>(null);
 
   useEffect(() => {
     if (!float) return;
@@ -24,8 +26,23 @@ function Logo3D({ sizeClass = "w-80 h-80", float = true }: { sizeClass?: string;
     });
   }, [float]);
 
+  useEffect(() => {
+    const el = tiltRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver(() => {
+      cachedRect.current = el.getBoundingClientRect();
+    });
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
+  const handleMouseEnter = () => {
+    if (tiltRef.current) cachedRect.current = tiltRef.current.getBoundingClientRect();
+  };
+
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
+    const rect = cachedRect.current;
+    if (!rect) return;
     const x = (e.clientX - rect.left) / rect.width;
     const y = (e.clientY - rect.top) / rect.height;
     setTilt({ x: (y - 0.5) * -30, y: (x - 0.5) * 30 });
@@ -36,6 +53,8 @@ function Logo3D({ sizeClass = "w-80 h-80", float = true }: { sizeClass?: string;
   return (
     <div ref={floatRef} className="flex items-center">
       <div
+        ref={tiltRef}
+        onMouseEnter={handleMouseEnter}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
         className={`relative shrink-0 ${sizeClass}`}
